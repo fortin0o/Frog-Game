@@ -6,7 +6,8 @@ class GameOverScene extends Phaser.Scene {
 
     create(data) {
         // ── Background ──────────────────────────────────────────
-        this.add.image(240, 360, 'background');
+        let bg = this.add.image(240, 320, 'background');
+        bg.setDisplaySize(484, 644); // Slight overscale to prevent edge lines
 
         // ── "GAME OVER" title ────────────────────────────────────
         this.add.text(240, 80, 'GAME  OVER', {

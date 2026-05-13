@@ -10,7 +10,8 @@ class GameScene extends Phaser.Scene {
         this.score = 0;
 
         // Background
-        this.background = this.add.tileSprite(240, 360, 480, 720, 'background');
+        this.background = this.add.tileSprite(240, 320, 480, 640, 'background');
+        this.background.setScale(1.02); // Slightly overscale to prevent edge lines
         
         this.pipes = this.physics.add.group({ allowGravity: false });
 

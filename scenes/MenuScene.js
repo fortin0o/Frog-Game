@@ -6,22 +6,25 @@ class MenuScene extends Phaser.Scene {
 
     create() {
         const W = 480;
+        const H = 640;
 
         // ── Background ──────────────────────────────────────────
-        this.add.image(240, 360, 'background');
+        // Scale slightly above 1.0 to eliminate potential edge lines
+        let bg = this.add.image(240, 320, 'background');
+        bg.setDisplaySize(W + 4, H + 4);
 
-        // ── Title "FROG JUMP" ────────────────────────────────────
-        let title = this.add.image(240, 80, 'title');
-        title.setScale(0.6); // Adjust scale as needed based on image size
+        // ── Title "FROG JUMP?" ───────────────────────────────────
+        let title = this.add.image(240, 100, 'title');
+        title.setScale(0.5);
 
-        // ── TOP SCORES panel ─────────────────────────────────────
+        // ── TOP SCORES panel (LEADERBOARD) ───────────────────────
         let panel = this.add.graphics();
         panel.fillStyle(0x0a1a0a, 0.85);
-        panel.fillRoundedRect(100, 150, 280, 220, 15);
+        panel.fillRoundedRect(100, 200, 280, 220, 15);
         panel.lineStyle(2, 0x16a34a, 1);
-        panel.strokeRoundedRect(100, 150, 280, 220, 15);
+        panel.strokeRoundedRect(100, 200, 280, 220, 15);
 
-        this.add.text(240, 175, 'TOP SCORES', {
+        this.add.text(240, 225, 'TOP SCORES', {
             fontSize: '24px',
             color: '#facc15',
             fontStyle: 'bold',
@@ -31,10 +34,10 @@ class MenuScene extends Phaser.Scene {
         // Divider
         let div = this.add.graphics();
         div.lineStyle(2, 0xfacc15, 0.3);
-        div.lineBetween(120, 200, 360, 200);
+        div.lineBetween(120, 250, 360, 250);
 
         let scores = Leaderboard.getScores();
-        let yOff = 215;
+        let yOff = 265;
         for (let i = 0; i < 4; i++) {
             let rankColor = i === 0 ? '#facc15' : '#ffffff';
             let scoreVal = scores[i] !== undefined ? scores[i] : '---';
@@ -47,24 +50,10 @@ class MenuScene extends Phaser.Scene {
             yOff += 36;
         }
 
-        // ── Big "JUMP" text ───────────────────────────────────────
-        this.add.text(240, 420, 'JUMP', {
-            fontSize: '84px',
-            color: '#f97316',
-            fontStyle: 'bold',
-            stroke: '#431407',
-            strokeThickness: 10,
-            shadow: { offsetX: 0, offsetY: 8, color: '#000000', blur: 0, fill: true }
-        }).setOrigin(0.5);
-
-        // ── START button ─────────────────────────────────────────
-        this._drawBtn(240, 510, 280, 60, 0x22c55e, 0x15803d, 'START', () => {
+        // ── Buttons ──────────────────────────────────────────────
+        // Start Button
+        this._drawBtn(240, 520, 260, 64, 0x22c55e, 0x15803d, 'START', () => {
             this.scene.start('GameScene');
-        });
-
-        // ── LEADERBOARD button ────────────────────────────────────
-        this._drawBtn(240, 585, 280, 52, 0xd97706, 0x92400e, 'LEADERBOARD', () => {
-            // Leaderboard action
         });
     }
 
