@@ -14,36 +14,15 @@ class MenuScene extends Phaser.Scene {
             fontStyle: 'bold'
         });
 
-        this.add.text(120, 300, 'Tap To Start', {
-            fontSize: '32px',
-            color: '#facc15'
-        });
-
-        let scores = Leaderboard.getScores();
-
-        let leaderboard = 'TOP SCORES\n\n';
-
-        if (scores.length === 0) {
-
-            leaderboard += 'No Scores Yet';
-
-        } else {
-
-            scores.forEach((score, index) => {
-
-                leaderboard += `${index + 1}. ${score}\n`;
-            });
-        }
-
-        this.add.text(150, 400, leaderboard, {
-            fontSize: '24px',
-            color: '#ffffff',
-            align: 'center'
-        });
-
-        this.input.once('pointerdown', () => {
-
+        let startBtn = this.add.image(240, 500, 'start_button').setInteractive();
+        startBtn.setDisplaySize(230, 70);
+        
+        startBtn.on('pointerdown', () => {
             this.scene.start('GameScene');
         });
+
+        let leadBtn = this.add.image(240, 600, 'leaderboard_button').setInteractive();
+        leadBtn.setDisplaySize(250, 75);
+        // The leaderboard is already displayed on the screen as text above these buttons.
     }
 }

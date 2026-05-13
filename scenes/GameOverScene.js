@@ -21,26 +21,28 @@ class GameOverScene extends Phaser.Scene {
 
         let scores = Leaderboard.getScores();
 
-        let leaderboard = 'TOP SCORES\n\n';
+        // Draw a nice dark semi-transparent panel for the leaderboard
+        let panel = this.add.graphics();
+        panel.fillStyle(0x000000, 0.7);
+        panel.fillRoundedRect(90, 360, 300, 220, 16);
 
-        scores.forEach((score, index) => {
-
-            leaderboard += `${index + 1}. ${score}\n`;
-        });
-
-        this.add.text(150, 380, leaderboard, {
-            fontSize: '24px',
+        this.add.text(240, 390, 'TOP SCORES', {
+            fontSize: '28px',
             color: '#facc15',
-            align: 'center'
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        let yOffset = 440;
+        scores.slice(0, 5).forEach((score, index) => {
+            this.add.text(140, yOffset, `${index + 1}.`, { fontSize: '24px', color: '#ffffff' });
+            this.add.text(340, yOffset, `${score}`, { fontSize: '24px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(1, 0);
+            yOffset += 35;
         });
 
-        this.add.text(110, 620, 'Tap To Restart', {
-            fontSize: '32px',
-            color: '#ffffff'
-        });
+        let restartBtn = this.add.image(240, 630, 'start_button').setInteractive();
+        restartBtn.setDisplaySize(200, 60);
 
-        this.input.once('pointerdown', () => {
-
+        restartBtn.on('pointerdown', () => {
             this.scene.start('GameScene');
         });
     }

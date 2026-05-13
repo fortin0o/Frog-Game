@@ -30,3 +30,5 @@ def make_transparent(file_path):
 
 make_transparent("assets/frog.png")
 make_transparent("assets/pipe.png")
+make_transparent("assets/pipe_top.png")
+make_transparent("assets/pipe_bottom.png")

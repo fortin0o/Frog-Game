@@ -1,19 +1,19 @@
 class Pipe extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, x, y, flip = false) {
+    constructor(scene, x, y, textureKey, flip = false) {
         
-        super(scene, x, y, 'pipe');
+        super(scene, x, y, textureKey);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
         this.body.allowGravity = false;
 
-        // Force pipe size so it's not gigantic if AI made it large
-        this.setDisplaySize(70, 400);
+        // Force pipe size so it's not gigantic, using a tall aspect ratio.
+        this.setDisplaySize(80, 500);
 
-        // Tighten the hitbox slightly
-        this.body.setSize(this.width * 0.8, this.height * 0.95);
+        // Adjust hitbox to fit the visual pipe better
+        this.body.setSize(this.width * 0.7, this.height * 0.95);
 
         if (flip) {
             this.setFlipY(true);
