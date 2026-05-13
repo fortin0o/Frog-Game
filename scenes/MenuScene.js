@@ -5,27 +5,27 @@ class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        const W = 480;
+        const W = 485;
         const H = 640;
 
         // ── Background ──────────────────────────────────────────
-        // Scale slightly above 1.0 to eliminate potential edge lines
-        let bg = this.add.image(240, 320, 'background');
-        bg.setDisplaySize(W + 4, H + 4);
+        // Overscan to ensure no black lines appear at the edges
+        this.add.image(240, 320, 'background').setDisplaySize(500, 660);
 
         // ── Title "FROG JUMP?" ───────────────────────────────────
-        let title = this.add.image(240, 110, 'title');
-        title.setScale(0.55);
+        let title = this.add.image(240, 130, 'title');
+        title.setScale(0.65); // Slightly larger to match presence
 
         // ── TOP SCORES panel (LEADERBOARD) ───────────────────────
         let panel = this.add.graphics();
-        panel.fillStyle(0x0a1a0a, 0.85);
-        panel.fillRoundedRect(90, 210, 300, 210, 15);
-        panel.lineStyle(2, 0x16a34a, 1);
-        panel.strokeRoundedRect(90, 210, 300, 210, 15);
+        panel.fillStyle(0x0a1a0a, 0.75); // Slightly more transparent
+        panel.fillRoundedRect(90, 260, 300, 230, 15);
+        panel.lineStyle(2, 0x22c55e, 1); // Brighter green border
+        panel.strokeRoundedRect(90, 260, 300, 230, 15);
 
-        this.add.text(240, 235, 'TOP SCORES', {
-            fontSize: '24px',
+        this.add.text(240, 285, 'TOP SCORES', {
+            fontFamily: 'monospace',
+            fontSize: '22px',
             color: '#facc15',
             fontStyle: 'bold',
             letterSpacing: 2
@@ -34,25 +34,25 @@ class MenuScene extends Phaser.Scene {
         // Divider
         let div = this.add.graphics();
         div.lineStyle(2, 0xfacc15, 0.3);
-        div.lineBetween(110, 260, 370, 260);
+        div.lineBetween(110, 310, 370, 310);
 
         let scores = Leaderboard.getScores();
-        let yOff = 275;
+        let yOff = 330;
         for (let i = 0; i < 4; i++) {
             let rankColor = i === 0 ? '#facc15' : '#ffffff';
             let scoreVal = scores[i] !== undefined ? scores[i] : '---';
             this.add.text(130, yOff, `${i + 1}.`, {
-                fontSize: '24px', color: rankColor, fontStyle: 'bold'
+                fontFamily: 'monospace', fontSize: '22px', color: rankColor, fontStyle: 'bold'
             });
             this.add.text(350, yOff, `${scoreVal}`, {
-                fontSize: '24px', color: rankColor, fontStyle: 'bold'
+                fontFamily: 'monospace', fontSize: '22px', color: rankColor, fontStyle: 'bold'
             }).setOrigin(1, 0);
-            yOff += 34;
+            yOff += 38;
         }
 
         // ── Buttons ──────────────────────────────────────────────
         // Start Button
-        this._drawBtn(240, 520, 260, 64, 0x22c55e, 0x15803d, 'START', () => {
+        this._drawBtn(240, 550, 280, 50, 0x4ade80, 0x16a34a, 'START', () => {
             this.scene.start('GameScene');
         });
     }
@@ -60,32 +60,29 @@ class MenuScene extends Phaser.Scene {
     _drawBtn(cx, cy, bw, bh, color, shadow, label, callback) {
         let btnShadow = this.add.graphics();
         btnShadow.fillStyle(shadow, 1);
-        btnShadow.fillRoundedRect(cx - bw/2, cy - bh/2 + 6, bw, bh, 12);
+        btnShadow.fillRoundedRect(cx - bw / 2, cy - bh / 2 + 8, bw, bh, 10); // Shadow offset
 
         let btnFace = this.add.graphics();
         btnFace.fillStyle(color, 1);
-        btnFace.fillRoundedRect(cx - bw/2, cy - bh/2, bw, bh, 12);
-        
-        // Shine
-        btnFace.fillStyle(0xffffff, 0.2);
-        btnFace.fillRoundedRect(cx - bw/2 + 5, cy - bh/2 + 5, bw - 10, bh/2 - 5, { tl: 10, tr: 10, bl: 0, br: 0 });
+        btnFace.fillRoundedRect(cx - bw / 2, cy - bh / 2, bw, bh, 10);
 
         let text = this.add.text(cx, cy, label, {
-            fontSize: '28px',
+            fontFamily: 'monospace',
+            fontSize: '32px',
             color: '#ffffff',
             fontStyle: 'bold',
             stroke: '#000000',
-            strokeThickness: 4
+            strokeThickness: 5
         }).setOrigin(0.5);
 
         let zone = this.add.zone(cx, cy, bw, bh + 6).setInteractive({ useHandCursor: true });
-        
+
         zone.on('pointerdown', () => {
             btnFace.y = 4;
             text.y = cy + 4;
             this.time.delayedCall(100, callback);
         });
-        
+
         zone.on('pointerup', () => {
             btnFace.y = 0;
             text.y = cy;

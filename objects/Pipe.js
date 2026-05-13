@@ -10,7 +10,7 @@ class Pipe extends Phaser.Physics.Arcade.Sprite {
         this.body.allowGravity = false;
 
         // Force pipe size so it's not gigantic, using a tall aspect ratio.
-        this.setDisplaySize(80, 500);
+        this.setDisplaySize(120, 500);
 
         // Adjust hitbox to fit the visual pipe better
         this.body.setSize(this.width * 0.7, this.height * 0.95);

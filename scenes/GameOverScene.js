@@ -6,8 +6,7 @@ class GameOverScene extends Phaser.Scene {
 
     create(data) {
         // ── Background ──────────────────────────────────────────
-        let bg = this.add.image(240, 320, 'background');
-        bg.setDisplaySize(484, 644); // Slight overscale to prevent edge lines
+        this.add.image(240, 320, 'background').setDisplaySize(500, 660);
 
         // ── "GAME OVER" title ────────────────────────────────────
         this.add.text(240, 80, 'GAME  OVER', {
@@ -21,18 +20,20 @@ class GameOverScene extends Phaser.Scene {
 
         // ── Score display box ─────────────────────────────────────
         let scoreBg = this.add.graphics();
-        scoreBg.fillStyle(0x000000, 0.7);
+        scoreBg.fillStyle(0x0a1a0a, 0.75);
         scoreBg.fillRoundedRect(120, 140, 240, 70, 15);
-        scoreBg.lineStyle(2, 0xfacc15, 0.8);
+        scoreBg.lineStyle(2, 0x22c55e, 1);
         scoreBg.strokeRoundedRect(120, 140, 240, 70, 15);
 
         this.add.text(240, 160, 'YOUR SCORE', {
+            fontFamily: 'monospace',
             fontSize: '18px',
             color: '#ffffff',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
         this.add.text(240, 185, `${data.score}`, {
+            fontFamily: 'monospace',
             fontSize: '36px',
             color: '#facc15',
             fontStyle: 'bold'
@@ -42,12 +43,13 @@ class GameOverScene extends Phaser.Scene {
         let scores = Leaderboard.getScores();
 
         let panel = this.add.graphics();
-        panel.fillStyle(0x0a1a0a, 0.85);
+        panel.fillStyle(0x0a1a0a, 0.75);
         panel.fillRoundedRect(75, 230, 330, 260, 15);
-        panel.lineStyle(2, 0x16a34a, 1);
+        panel.lineStyle(2, 0x22c55e, 1);
         panel.strokeRoundedRect(75, 230, 330, 260, 15);
 
         this.add.text(240, 255, 'TOP SCORES', {
+            fontFamily: 'monospace',
             fontSize: '24px',
             color: '#facc15',
             fontStyle: 'bold',
@@ -59,22 +61,22 @@ class GameOverScene extends Phaser.Scene {
         div.lineStyle(2, 0xfacc15, 0.3);
         div.lineBetween(100, 275, 380, 275);
 
-        let yOffset = 285;
+        let yOffset = 295;
         if (scores.length === 0) {
             this.add.text(240, 360, 'No scores yet!', {
-                fontSize: '22px', color: '#aaaaaa'
+                fontFamily: 'monospace', fontSize: '22px', color: '#aaaaaa'
             }).setOrigin(0.5);
         } else {
             scores.slice(0, 5).forEach((score, index) => {
                 let rankColor = index === 0 ? '#facc15' : '#ffffff';
-                this.add.text(120, yOffset, `${index + 1}.`, { fontSize: '24px', color: rankColor, fontStyle: 'bold' });
-                this.add.text(360, yOffset, `${score}`, { fontSize: '24px', color: rankColor, fontStyle: 'bold' }).setOrigin(1, 0);
+                this.add.text(120, yOffset, `${index + 1}.`, { fontFamily: 'monospace', fontSize: '24px', color: rankColor, fontStyle: 'bold' });
+                this.add.text(360, yOffset, `${score}`, { fontFamily: 'monospace', fontSize: '24px', color: rankColor, fontStyle: 'bold' }).setOrigin(1, 0);
                 yOffset += 40;
             });
         }
 
         // ── RESTART button ────────────────────────────────────────
-        this._drawBtn(240, 560, 260, 60, 0x22c55e, 0x15803d, 'RESTART', () => {
+        this._drawBtn(240, 550, 280, 50, 0x4ade80, 0x16a34a, 'RESTART', () => {
             this.scene.start('GameScene');
         });
     }
@@ -82,21 +84,19 @@ class GameOverScene extends Phaser.Scene {
     _drawBtn(cx, cy, bw, bh, color, shadow, label, callback) {
         let btnShadow = this.add.graphics();
         btnShadow.fillStyle(shadow, 1);
-        btnShadow.fillRoundedRect(cx - bw/2, cy - bh/2 + 6, bw, bh, 12);
+        btnShadow.fillRoundedRect(cx - bw/2, cy - bh/2 + 8, bw, bh, 10);
 
         let btnFace = this.add.graphics();
         btnFace.fillStyle(color, 1);
-        btnFace.fillRoundedRect(cx - bw/2, cy - bh/2, bw, bh, 12);
-        
-        btnFace.fillStyle(0xffffff, 0.2);
-        btnFace.fillRoundedRect(cx - bw/2 + 5, cy - bh/2 + 5, bw - 10, bh/2 - 5, { tl: 10, tr: 10, bl: 0, br: 0 });
+        btnFace.fillRoundedRect(cx - bw/2, cy - bh/2, bw, bh, 10);
 
         let text = this.add.text(cx, cy, label, {
-            fontSize: '28px',
+            fontFamily: 'monospace',
+            fontSize: '32px',
             color: '#ffffff',
             fontStyle: 'bold',
             stroke: '#000000',
-            strokeThickness: 4
+            strokeThickness: 5
         }).setOrigin(0.5);
 
         let zone = this.add.zone(cx, cy, bw, bh + 6).setInteractive({ useHandCursor: true });

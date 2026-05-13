@@ -5,7 +5,7 @@ const config = {
     parent: 'game-container',
     pixelArt: true,
     scale: {
-        mode: Phaser.Scale.FIT,
+        mode: Phaser.Scale.NONE,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
 

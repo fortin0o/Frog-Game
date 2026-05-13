@@ -10,8 +10,7 @@ class GameScene extends Phaser.Scene {
         this.score = 0;
 
         // Background
-        this.background = this.add.tileSprite(240, 320, 480, 640, 'background');
-        this.background.setScale(1.02); // Slightly overscale to prevent edge lines
+        this.background = this.add.tileSprite(240, 320, 500, 660, 'background');
         
         this.pipes = this.physics.add.group({ allowGravity: false });
 
@@ -95,10 +94,9 @@ class GameScene extends Phaser.Scene {
         this.pipes.getChildren().forEach(pipe => {
             pipe.update();
 
-            // Count score only on the bottom pipe
             if (pipe.texture.key === 'pipe_bottom' && !pipe.passed && pipe.x < this.frog.x) {
                 pipe.passed = true;
-                this.score++;
+                this.score++ - 1;
                 this.scoreText.setText('Score: ' + this.score);
             }
         });
