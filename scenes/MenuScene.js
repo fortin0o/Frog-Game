@@ -14,17 +14,17 @@ class MenuScene extends Phaser.Scene {
         bg.setDisplaySize(W + 4, H + 4);
 
         // ── Title "FROG JUMP?" ───────────────────────────────────
-        let title = this.add.image(240, 100, 'title');
-        title.setScale(0.5);
+        let title = this.add.image(240, 110, 'title');
+        title.setScale(0.55);
 
         // ── TOP SCORES panel (LEADERBOARD) ───────────────────────
         let panel = this.add.graphics();
         panel.fillStyle(0x0a1a0a, 0.85);
-        panel.fillRoundedRect(100, 200, 280, 220, 15);
+        panel.fillRoundedRect(90, 210, 300, 210, 15);
         panel.lineStyle(2, 0x16a34a, 1);
-        panel.strokeRoundedRect(100, 200, 280, 220, 15);
+        panel.strokeRoundedRect(90, 210, 300, 210, 15);
 
-        this.add.text(240, 225, 'TOP SCORES', {
+        this.add.text(240, 235, 'TOP SCORES', {
             fontSize: '24px',
             color: '#facc15',
             fontStyle: 'bold',
@@ -34,20 +34,20 @@ class MenuScene extends Phaser.Scene {
         // Divider
         let div = this.add.graphics();
         div.lineStyle(2, 0xfacc15, 0.3);
-        div.lineBetween(120, 250, 360, 250);
+        div.lineBetween(110, 260, 370, 260);
 
         let scores = Leaderboard.getScores();
-        let yOff = 265;
+        let yOff = 275;
         for (let i = 0; i < 4; i++) {
             let rankColor = i === 0 ? '#facc15' : '#ffffff';
             let scoreVal = scores[i] !== undefined ? scores[i] : '---';
-            this.add.text(140, yOff, `${i + 1}.`, {
+            this.add.text(130, yOff, `${i + 1}.`, {
                 fontSize: '24px', color: rankColor, fontStyle: 'bold'
             });
-            this.add.text(340, yOff, `${scoreVal}`, {
+            this.add.text(350, yOff, `${scoreVal}`, {
                 fontSize: '24px', color: rankColor, fontStyle: 'bold'
             }).setOrigin(1, 0);
-            yOff += 36;
+            yOff += 34;
         }
 
         // ── Buttons ──────────────────────────────────────────────
