@@ -25,6 +25,7 @@ class BootScene extends Phaser.Scene {
         this.load.image('leaderboard_button', 'assets/leaderboard_button.png');
         this.load.image('game_over', 'assets/game_over.png');
         this.load.image('coin', 'assets/coin.png');
+        this.load.image('title', 'assets/title.png');
     }
 
     create() {

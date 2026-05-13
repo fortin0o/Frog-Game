@@ -11,14 +11,8 @@ class MenuScene extends Phaser.Scene {
         this.add.image(240, 360, 'background');
 
         // ── Title "FROG JUMP" ────────────────────────────────────
-        this.add.text(240, 80, 'FROG  JUMP', {
-            fontSize: '64px',
-            color: '#ffffff',
-            fontStyle: 'bold',
-            stroke: '#000000',
-            strokeThickness: 10,
-            shadow: { offsetX: 0, offsetY: 4, color: '#000000', blur: 0, fill: true }
-        }).setOrigin(0.5);
+        let title = this.add.image(240, 80, 'title');
+        title.setScale(0.6); // Adjust scale as needed based on image size
 
         // ── TOP SCORES panel ─────────────────────────────────────
         let panel = this.add.graphics();
