@@ -21,18 +21,18 @@ class GameOverScene extends Phaser.Scene {
         // ── Score display box ─────────────────────────────────────
         let scoreBg = this.add.graphics();
         scoreBg.fillStyle(0x000000, 0.7);
-        scoreBg.fillRoundedRect(120, 150, 240, 80, 15);
+        scoreBg.fillRoundedRect(120, 140, 240, 70, 15);
         scoreBg.lineStyle(2, 0xfacc15, 0.8);
-        scoreBg.strokeRoundedRect(120, 150, 240, 80, 15);
+        scoreBg.strokeRoundedRect(120, 140, 240, 70, 15);
 
-        this.add.text(240, 175, 'YOUR SCORE', {
+        this.add.text(240, 160, 'YOUR SCORE', {
             fontSize: '18px',
             color: '#ffffff',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        this.add.text(240, 205, `${data.score}`, {
-            fontSize: '42px',
+        this.add.text(240, 185, `${data.score}`, {
+            fontSize: '36px',
             color: '#facc15',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -42,12 +42,12 @@ class GameOverScene extends Phaser.Scene {
 
         let panel = this.add.graphics();
         panel.fillStyle(0x0a1a0a, 0.85);
-        panel.fillRoundedRect(75, 260, 330, 300, 15);
+        panel.fillRoundedRect(75, 230, 330, 260, 15);
         panel.lineStyle(2, 0x16a34a, 1);
-        panel.strokeRoundedRect(75, 260, 330, 300, 15);
+        panel.strokeRoundedRect(75, 230, 330, 260, 15);
 
-        this.add.text(240, 290, 'TOP SCORES', {
-            fontSize: '26px',
+        this.add.text(240, 255, 'TOP SCORES', {
+            fontSize: '24px',
             color: '#facc15',
             fontStyle: 'bold',
             letterSpacing: 2
@@ -56,24 +56,24 @@ class GameOverScene extends Phaser.Scene {
         // Divider
         let div = this.add.graphics();
         div.lineStyle(2, 0xfacc15, 0.3);
-        div.lineBetween(100, 315, 380, 315);
+        div.lineBetween(100, 275, 380, 275);
 
-        let yOffset = 330;
+        let yOffset = 285;
         if (scores.length === 0) {
-            this.add.text(240, 420, 'No scores yet!', {
+            this.add.text(240, 360, 'No scores yet!', {
                 fontSize: '22px', color: '#aaaaaa'
             }).setOrigin(0.5);
         } else {
             scores.slice(0, 5).forEach((score, index) => {
                 let rankColor = index === 0 ? '#facc15' : '#ffffff';
-                this.add.text(120, yOffset, `${index + 1}.`, { fontSize: '26px', color: rankColor, fontStyle: 'bold' });
-                this.add.text(360, yOffset, `${score}`, { fontSize: '26px', color: rankColor, fontStyle: 'bold' }).setOrigin(1, 0);
-                yOffset += 45;
+                this.add.text(120, yOffset, `${index + 1}.`, { fontSize: '24px', color: rankColor, fontStyle: 'bold' });
+                this.add.text(360, yOffset, `${score}`, { fontSize: '24px', color: rankColor, fontStyle: 'bold' }).setOrigin(1, 0);
+                yOffset += 40;
             });
         }
 
         // ── RESTART button ────────────────────────────────────────
-        this._drawBtn(240, 630, 260, 64, 0x22c55e, 0x15803d, 'RESTART', () => {
+        this._drawBtn(240, 560, 260, 60, 0x22c55e, 0x15803d, 'RESTART', () => {
             this.scene.start('GameScene');
         });
     }

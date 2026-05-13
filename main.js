@@ -1,9 +1,13 @@
 const config = {
     type: Phaser.AUTO,
     width: 480,
-    height: 680,
+    height: 640,
     parent: 'game-container',
     pixelArt: true,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
 
     physics: {
         default: 'arcade',

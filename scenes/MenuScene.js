@@ -11,7 +11,7 @@ class MenuScene extends Phaser.Scene {
         this.add.image(240, 360, 'background');
 
         // ── Title "FROG JUMP" ────────────────────────────────────
-        this.add.text(240, 100, 'FROG  JUMP', {
+        this.add.text(240, 80, 'FROG  JUMP', {
             fontSize: '64px',
             color: '#ffffff',
             fontStyle: 'bold',
@@ -23,11 +23,11 @@ class MenuScene extends Phaser.Scene {
         // ── TOP SCORES panel ─────────────────────────────────────
         let panel = this.add.graphics();
         panel.fillStyle(0x0a1a0a, 0.85);
-        panel.fillRoundedRect(100, 180, 280, 240, 15);
+        panel.fillRoundedRect(100, 150, 280, 220, 15);
         panel.lineStyle(2, 0x16a34a, 1);
-        panel.strokeRoundedRect(100, 180, 280, 240, 15);
+        panel.strokeRoundedRect(100, 150, 280, 220, 15);
 
-        this.add.text(240, 210, 'TOP SCORES', {
+        this.add.text(240, 175, 'TOP SCORES', {
             fontSize: '24px',
             color: '#facc15',
             fontStyle: 'bold',
@@ -37,24 +37,24 @@ class MenuScene extends Phaser.Scene {
         // Divider
         let div = this.add.graphics();
         div.lineStyle(2, 0xfacc15, 0.3);
-        div.lineBetween(120, 235, 360, 235);
+        div.lineBetween(120, 200, 360, 200);
 
         let scores = Leaderboard.getScores();
-        let yOff = 250;
+        let yOff = 215;
         for (let i = 0; i < 4; i++) {
             let rankColor = i === 0 ? '#facc15' : '#ffffff';
             let scoreVal = scores[i] !== undefined ? scores[i] : '---';
             this.add.text(140, yOff, `${i + 1}.`, {
-                fontSize: '26px', color: rankColor, fontStyle: 'bold'
+                fontSize: '24px', color: rankColor, fontStyle: 'bold'
             });
             this.add.text(340, yOff, `${scoreVal}`, {
-                fontSize: '26px', color: rankColor, fontStyle: 'bold'
+                fontSize: '24px', color: rankColor, fontStyle: 'bold'
             }).setOrigin(1, 0);
-            yOff += 40;
+            yOff += 36;
         }
 
         // ── Big "JUMP" text ───────────────────────────────────────
-        this.add.text(240, 460, 'JUMP', {
+        this.add.text(240, 420, 'JUMP', {
             fontSize: '84px',
             color: '#f97316',
             fontStyle: 'bold',
@@ -64,12 +64,12 @@ class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // ── START button ─────────────────────────────────────────
-        this._drawBtn(240, 560, 280, 64, 0x22c55e, 0x15803d, 'START', () => {
+        this._drawBtn(240, 510, 280, 60, 0x22c55e, 0x15803d, 'START', () => {
             this.scene.start('GameScene');
         });
 
         // ── LEADERBOARD button ────────────────────────────────────
-        this._drawBtn(240, 640, 280, 56, 0xd97706, 0x92400e, 'LEADERBOARD', () => {
+        this._drawBtn(240, 585, 280, 52, 0xd97706, 0x92400e, 'LEADERBOARD', () => {
             // Leaderboard action
         });
     }
