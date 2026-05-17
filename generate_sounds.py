@@ -99,5 +99,30 @@ def generate_bg_music(filename):
             packed_value = struct.pack('h', int(value * 0.04 * env * 32767.0))
             wav_file.writeframes(packed_value)
 
+def generate_coin(filename):
+    sample_rate = 44100
+    duration_ms = 150
+    num_samples = int(sample_rate * (duration_ms / 1000.0))
+    
+    with wave.open(filename, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        
+        for i in range(num_samples):
+            t = float(i) / sample_rate
+            # High-pitched ding, frequency jumps halfway through
+            freq = 987.77 if i < num_samples / 2 else 1318.51 # B5 to E6
+            
+            # Sine wave
+            value = math.sin(2.0 * math.pi * freq * t)
+            
+            # Envelope (quick attack, then decay)
+            envelope = 1.0 - (i / num_samples)
+            
+            packed_value = struct.pack('h', int(value * envelope * 0.3 * 32767.0))
+            wav_file.writeframes(packed_value)
+
 generate_bg_music('assets/bgmusic.wav')
+generate_coin('assets/coin.wav')
 print("Sounds generated successfully.")

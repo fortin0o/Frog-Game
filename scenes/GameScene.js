@@ -26,7 +26,11 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.frog, this.pipes, this.handleGameOver, null, this);
         this.physics.add.collider(this.frog, this.cliff);
 
+        this.coins = this.physics.add.group({ allowGravity: false });
+        this.physics.add.overlap(this.frog, this.coins, this.collectCoin, null, this);
+
         this.input.on('pointerdown', this.jump, this);
+        this.input.keyboard.on('keydown-SPACE', this.jump, this);
 
         this.scoreText = this.add.text(16, 16, 'Score: 0', { 
             fontSize: '32px', 
@@ -80,6 +84,12 @@ class GameScene extends Phaser.Scene {
         
         pipeTop.setVelocityX(-200);
         pipeBottom.setVelocityX(-200);
+
+        // Spawn coin in the gap
+        let coin = this.coins.create(550, pipeY, 'coin');
+        coin.setVelocityX(-200);
+        coin.body.allowGravity = false;
+        coin.setDisplaySize(40, 40); // ensure it's a good size
     }
 
     update() {
@@ -102,9 +112,25 @@ class GameScene extends Phaser.Scene {
             }
         });
 
+        // Cleanup off-screen coins
+        this.coins.getChildren().forEach(coin => {
+            if (coin.x < -50) {
+                coin.destroy();
+            }
+        });
+
         if (this.frog.y > 750 || this.frog.y < -50) {
             this.handleGameOver();
         }
+    }
+
+    collectCoin(frog, coin) {
+        if (this.gameOver) return;
+        
+        coin.destroy();
+        this.score += 3;
+        this.scoreText.setText('Score: ' + this.score);
+        this.sound.play('coin', { volume: 0.4 });
     }
 
     handleGameOver() {
