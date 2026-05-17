@@ -12,6 +12,9 @@ class GameScene extends Phaser.Scene {
         // Background
         this.background = this.add.tileSprite(240, 320, 500, 660, 'background');
         
+        // Mid-ground Clouds (Parallax)
+        this.clouds = this.add.tileSprite(240, 320, 500, 660, 'clouds');
+        
         this.pipes = this.physics.add.group({ allowGravity: false });
 
         this.frog = new Frog(this, 100, 300);
@@ -113,7 +116,9 @@ class GameScene extends Phaser.Scene {
                 this.pipeTimer.timeScale = Math.abs(currentSpeed) / 200;
             }
 
+            // Parallax Scrolling: Background is slow, clouds are twice as fast
             this.background.tilePositionX += Math.abs(currentSpeed) / 200;
+            this.clouds.tilePositionX += Math.abs(currentSpeed) / 100;
 
             // Constantly update speed of all moving elements to prevent overlaps when difficulty increments
             this.pipes.getChildren().forEach(pipe => pipe.setVelocityX(currentSpeed));
