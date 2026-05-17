@@ -123,6 +123,28 @@ def generate_coin(filename):
             packed_value = struct.pack('h', int(value * envelope * 0.3 * 32767.0))
             wav_file.writeframes(packed_value)
 
+def generate_score(filename):
+    sample_rate = 44100
+    duration_ms = 100
+    num_samples = int(sample_rate * (duration_ms / 1000.0))
+    
+    with wave.open(filename, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        
+        for i in range(num_samples):
+            t = float(i) / sample_rate
+            # Simple mid-pitch ding (E5)
+            freq = 659.25
+            
+            value = math.sin(2.0 * math.pi * freq * t)
+            envelope = 1.0 - (i / num_samples)
+            
+            packed_value = struct.pack('h', int(value * envelope * 0.2 * 32767.0))
+            wav_file.writeframes(packed_value)
+
 generate_bg_music('assets/bgmusic.wav')
 generate_coin('assets/coin.wav')
+generate_score('assets/score.wav')
 print("Sounds generated successfully.")

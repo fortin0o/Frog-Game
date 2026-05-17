@@ -135,6 +135,7 @@ class GameScene extends Phaser.Scene {
                 pipe.passed = true;
                 this.score++;
                 this.scoreText.setText('Score: ' + this.score);
+                this.sound.play('score', { volume: 0.5 });
             }
         });
 
