@@ -94,9 +94,10 @@ class GameScene extends Phaser.Scene {
         this.pipes.getChildren().forEach(pipe => {
             pipe.update();
 
-            if (pipe.texture.key === 'pipe_bottom' && !pipe.passed && pipe.x < this.frog.x) {
+            // Only score once per pair of pipes (the bottom pipe is not flipped)
+            if (!pipe.flipY && !pipe.passed && pipe.x < this.frog.x) {
                 pipe.passed = true;
-                this.score++ - 1;
+                this.score++;
                 this.scoreText.setText('Score: ' + this.score);
             }
         });
