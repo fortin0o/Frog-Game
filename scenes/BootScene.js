@@ -36,6 +36,13 @@ class BootScene extends Phaser.Scene {
     }
 
     create() {
+        // Generate a simple white circle texture for the dust particles
+        let graphics = this.make.graphics();
+        graphics.fillStyle(0xffffff, 1);
+        graphics.fillCircle(4, 4, 4);
+        graphics.generateTexture('particle', 8, 8);
+        graphics.destroy();
+
         this.anims.create({
             key: 'idle',
             frames: [

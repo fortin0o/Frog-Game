@@ -43,6 +43,34 @@ class GameScene extends Phaser.Scene {
             strokeThickness: 4
         });
         this.scoreText.setDepth(1);
+
+        // Setup Dust Particles
+        try {
+            // Phaser 3.60+ syntax
+            this.dustEmitter = this.add.particles(0, 0, 'particle', {
+                speed: { min: 50, max: 120 },
+                angle: { min: 45, max: 135 }, // Downwards spread
+                scale: { start: 1, end: 0 },
+                alpha: { start: 0.6, end: 0 },
+                lifespan: 300,
+                gravityY: 200,
+                emitting: false
+            });
+            this.dustEmitter.setDepth(2);
+        } catch (e) {
+            // Fallback for older Phaser 3.5x
+            let particles = this.add.particles('particle');
+            this.dustEmitter = particles.createEmitter({
+                speed: { min: 50, max: 120 },
+                angle: { min: 45, max: 135 },
+                scale: { start: 1, end: 0 },
+                alpha: { start: 0.6, end: 0 },
+                lifespan: 300,
+                gravityY: 200,
+                on: false
+            });
+            particles.setDepth(2);
+        }
     }
 
     jump() {
@@ -62,6 +90,15 @@ class GameScene extends Phaser.Scene {
         }
 
         this.frog.jump();
+        
+        // Emit dust particles under the frog
+        if (this.dustEmitter) {
+            if (this.dustEmitter.emitParticleAt) {
+                this.dustEmitter.emitParticleAt(this.frog.x, this.frog.y + 20, 6);
+            } else if (this.dustEmitter.explode) {
+                this.dustEmitter.explode(6, this.frog.x, this.frog.y + 20);
+            }
+        }
     }
 
     addPipes() {
