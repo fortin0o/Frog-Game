@@ -64,7 +64,13 @@ class GameScene extends Phaser.Scene {
     addPipes() {
         if (this.gameOver) return;
 
-        let gap = 220; // Much more generous gap
+        let difficultyLevel = Math.floor(this.score / 5);
+        
+        let gap = 220 - (difficultyLevel * 10);
+        gap = Math.max(gap, 130); // Minimum gap of 130
+        
+        let currentSpeed = -200 - (difficultyLevel * 15);
+        currentSpeed = Math.max(currentSpeed, -400);
         
         let pipeY = Phaser.Math.Between(250, 500);
 
@@ -82,13 +88,13 @@ class GameScene extends Phaser.Scene {
         pipeTop.body.allowGravity = false;
         pipeBottom.body.allowGravity = false;
         
-        pipeTop.setVelocityX(-200);
-        pipeBottom.setVelocityX(-200);
+        pipeTop.setVelocityX(currentSpeed);
+        pipeBottom.setVelocityX(currentSpeed);
 
         // Spawn coin in the gap with 30% chance
         if (Phaser.Math.Between(1, 100) <= 30) {
             let coin = this.coins.create(550, pipeY, 'coin');
-            coin.setVelocityX(-200);
+            coin.setVelocityX(currentSpeed);
             coin.body.allowGravity = false;
             coin.setDisplaySize(40, 40); // ensure it's a good size
         }
@@ -98,7 +104,20 @@ class GameScene extends Phaser.Scene {
         if (this.gameOver) return;
 
         if (this.hasStarted) {
-            this.background.tilePositionX += 1;
+            let difficultyLevel = Math.floor(this.score / 5);
+            let currentSpeed = -200 - (difficultyLevel * 15);
+            currentSpeed = Math.max(currentSpeed, -400);
+
+            // Scale timer to spawn pipes faster as speed increases
+            if (this.pipeTimer) {
+                this.pipeTimer.timeScale = Math.abs(currentSpeed) / 200;
+            }
+
+            this.background.tilePositionX += Math.abs(currentSpeed) / 200;
+
+            // Constantly update speed of all moving elements to prevent overlaps when difficulty increments
+            this.pipes.getChildren().forEach(pipe => pipe.setVelocityX(currentSpeed));
+            this.coins.getChildren().forEach(coin => coin.setVelocityX(currentSpeed));
         }
 
         this.frog.update();
