@@ -11,6 +11,7 @@ class BootScene extends Phaser.Scene {
         this.load.image('frog_idle_2', 'assets/frog_idle_2.png');
         this.load.image('frog_jump_1', 'assets/frog_jump_1.png');
         this.load.image('frog_jump_2', 'assets/frog_jump_2.png');
+        this.load.image('frog_flying', 'assets/frog_flying.png');
         
         this.load.image('pipe', 'assets/pipe.png');
         this.load.image('pipe_top', 'assets/pipe_top.png');
@@ -19,6 +20,7 @@ class BootScene extends Phaser.Scene {
         // Environment
         this.load.image('background', 'assets/background.png');
         this.load.image('ground', 'assets/ground.png');
+        this.load.image('cliff', 'assets/cliff.png');
 
         // UI
         this.load.image('start_button', 'assets/start_button.png');
@@ -26,6 +28,11 @@ class BootScene extends Phaser.Scene {
         this.load.image('game_over', 'assets/game_over.png');
         this.load.image('coin', 'assets/coin.png');
         this.load.image('title', 'assets/title.png');
+
+        // Sounds
+        this.load.audio('bgmusic', 'assets/bgmusic.wav');
+        this.load.audio('jump', 'assets/jump.wav');
+        this.load.audio('gameover', 'assets/gameover.wav');
     }
 
     create() {
@@ -42,8 +49,7 @@ class BootScene extends Phaser.Scene {
         this.anims.create({
             key: 'jump',
             frames: [
-                { key: 'frog_jump_1' },
-                { key: 'frog_jump_2' }
+                { key: 'frog_flying' }
             ],
             frameRate: 8,
             repeat: 0

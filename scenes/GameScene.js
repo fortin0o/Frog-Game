@@ -18,7 +18,7 @@ class GameScene extends Phaser.Scene {
         this.frog.body.allowGravity = false; // Hover until start
 
         // Cliff
-        this.cliff = this.physics.add.sprite(100, 600, 'ground');
+        this.cliff = this.physics.add.sprite(100, 600, 'cliff');
         this.cliff.setDisplaySize(200, 600);
         this.cliff.setImmovable(true);
         this.cliff.body.allowGravity = false;
@@ -113,12 +113,25 @@ class GameScene extends Phaser.Scene {
 
         Leaderboard.saveScore(this.score);
 
+        this.sound.play('gameover');
+
         if (this.pipeTimer) {
             this.pipeTimer.remove(false);
         }
 
         this.physics.pause();
         this.frog.setTint(0xff0000);
+
+        // Cartoonish death pop
+        this.tweens.add({
+            targets: this.frog,
+            displayWidth: 120,
+            displayHeight: 120,
+            angle: 180,
+            alpha: 0,
+            duration: 800,
+            ease: 'Power2'
+        });
 
         this.time.delayedCall(1000, () => {
             this.scene.start('GameOverScene', { score: this.score });

@@ -18,16 +18,19 @@ class Frog extends Phaser.Physics.Arcade.Sprite {
     }
 
     jump() {
+        this.scene.sound.play('jump', { volume: 0.3 });
         this.setVelocityY(-400);
         this.play('jump');
     }
 
     update() {
-        this.rotation = Phaser.Math.Clamp(
-            this.body.velocity.y * 0.0015,
-            -0.5,
-            0.5
+        // Exaggerated and smoothed rotation
+        let targetRotation = Phaser.Math.Clamp(
+            this.body.velocity.y * 0.0025,
+            -0.8,
+            0.8
         );
+        this.rotation += (targetRotation - this.rotation) * 0.15;
         
         if (this.body.velocity.y > 50 && this.anims.currentAnim && this.anims.currentAnim.key !== 'idle') {
             this.play('idle');
