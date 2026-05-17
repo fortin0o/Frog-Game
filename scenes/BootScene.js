@@ -5,10 +5,7 @@ class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // Character & Obstacle
-        this.load.image('frog', 'assets/frog.png');
         this.load.image('frog_idle_1', 'assets/frog_idle_1.png');
-        this.load.image('frog_idle_2', 'assets/frog_idle_2.png');
         this.load.image('frog_jump_1', 'assets/frog_jump_1.png');
         this.load.image('frog_jump_2', 'assets/frog_jump_2.png');
         this.load.image('frog_flying', 'assets/frog_flying.png');
@@ -39,8 +36,7 @@ class BootScene extends Phaser.Scene {
         this.anims.create({
             key: 'idle',
             frames: [
-                { key: 'frog_idle_1' },
-                { key: 'frog_idle_2' }
+                { key: 'frog_idle_1' }
             ],
             frameRate: 4,
             repeat: -1
