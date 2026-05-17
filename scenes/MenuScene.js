@@ -10,7 +10,7 @@ class MenuScene extends Phaser.Scene {
 
         // ── Background ──────────────────────────────────────────
         // Overscan to ensure no black lines appear at the edges
-        this.add.image(240, 320, 'background').setDisplaySize(660, 660);
+        this.add.image(240, 320, 'background').setDisplaySize(485, 640);
 
         // Play bg music if it's not already playing
         let bgMusic = this.sound.get('bgmusic');
@@ -23,7 +23,7 @@ class MenuScene extends Phaser.Scene {
 
         // ── Title "FROG JUMP?" ───────────────────────────────────
         let title = this.add.image(240, 130, 'title');
-        title.setScale(0.65); // Slightly larger to match presence
+        title.setScale(0.3); // Slightly larger to match presence
 
         // ── TOP SCORES panel (LEADERBOARD) ───────────────────────
         let panel = this.add.graphics();
