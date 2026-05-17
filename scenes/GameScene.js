@@ -85,11 +85,13 @@ class GameScene extends Phaser.Scene {
         pipeTop.setVelocityX(-200);
         pipeBottom.setVelocityX(-200);
 
-        // Spawn coin in the gap
-        let coin = this.coins.create(550, pipeY, 'coin');
-        coin.setVelocityX(-200);
-        coin.body.allowGravity = false;
-        coin.setDisplaySize(40, 40); // ensure it's a good size
+        // Spawn coin in the gap with 30% chance
+        if (Phaser.Math.Between(1, 100) <= 30) {
+            let coin = this.coins.create(550, pipeY, 'coin');
+            coin.setVelocityX(-200);
+            coin.body.allowGravity = false;
+            coin.setDisplaySize(40, 40); // ensure it's a good size
+        }
     }
 
     update() {
