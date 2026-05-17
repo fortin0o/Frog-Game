@@ -1,26 +1,24 @@
-# pyrefly: ignore [missing-import]
 from PIL import Image
 
-def draw_grid():
+def draw_frog_lowres():
     img = Image.open('assets/frog_idle_1.png').convert('RGBA')
-    width, height = img.size
+    # Resize to 32x32
+    lowres = img.resize((32, 32), Image.Resampling.LANCZOS)
     
-    # Bounding box is (185, 202, 839, 822)
-    # Let's inspect x=480 to 540 (center is around 512) and y=780 to 822
-    for y in range(780, 823):
+    for y in range(32):
         row = []
-        for x in range(480, 540):
-            r, g, b, a = img.getpixel((x, y))
-            if a == 0:
+        for x in range(32):
+            r, g, b, a = lowres.getpixel((x, y))
+            if a < 50:
                 row.append(".")
-            elif r < 40 and g < 40 and b < 40:
-                row.append("B") # Black outline
-            elif 100 <= r <= 135 and 125 <= g <= 155 and 45 <= b <= 80:
-                row.append("S") # Shadow (olive green)
-            elif 100 <= r <= 110 and 180 <= g <= 190 and 95 <= b <= 105:
-                row.append("F") # Frog (bright green)
+            elif r < 60 and g < 60 and b < 60:
+                row.append("E") # Black outline/eye
+            elif 100 <= r <= 150 and 180 <= g <= 255 and 80 <= b <= 150:
+                row.append("F") # Green Frog body
+            elif r > 200 and g > 200 and b < 150:
+                row.append("Y") # Yellow belly (if any)
             else:
                 row.append("?") # Other
-        print(f"{y:3d}: " + "".join(row))
+        print("".join(row))
 
-draw_grid()
+draw_frog_lowres()
