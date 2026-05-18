@@ -9,6 +9,13 @@ class GameScene extends Phaser.Scene {
         this.hasStarted = false;
         this.score = 0;
 
+        // Power-up state
+        this.hasShield = false;
+        this.hasMagnet = false;
+        this.magnetTimer = null;
+        this.shieldGfx = null;
+        this.magnetIndicator = null;
+
         // Background
         this.background = this.add.tileSprite(240, 320, 500, 660, 'background');
         
@@ -26,11 +33,16 @@ class GameScene extends Phaser.Scene {
         this.cliff.setImmovable(true);
         this.cliff.body.allowGravity = false;
 
-        this.physics.add.collider(this.frog, this.pipes, this.handleGameOver, null, this);
+        this.physics.add.collider(this.frog, this.pipes, this.handlePipeCollision, null, this);
         this.physics.add.collider(this.frog, this.cliff);
 
+        // Coins
         this.coins = this.physics.add.group({ allowGravity: false });
         this.physics.add.overlap(this.frog, this.coins, this.collectCoin, null, this);
+
+        // Power-ups
+        this.powerups = this.physics.add.group({ allowGravity: false });
+        this.physics.add.overlap(this.frog, this.powerups, this.collectPowerup, null, this);
 
         this.input.on('pointerdown', this.jump, this);
         this.input.keyboard.on('keydown-SPACE', this.jump, this);
@@ -43,6 +55,20 @@ class GameScene extends Phaser.Scene {
             strokeThickness: 4
         });
         this.scoreText.setDepth(1);
+
+        // Power-up status indicator (top right)
+        this.statusText = this.add.text(470, 16, '', {
+            fontSize: '18px',
+            color: '#ffffff',
+            fontStyle: 'bold',
+            stroke: '#000000',
+            strokeThickness: 3,
+            align: 'right'
+        }).setOrigin(1, 0).setDepth(10);
+
+        // Shield visual aura (drawn around the frog when active)
+        this.shieldGfx = this.add.graphics();
+        this.shieldGfx.setDepth(3);
 
         // Setup Dust Particles
         try {
@@ -71,6 +97,11 @@ class GameScene extends Phaser.Scene {
             });
             particles.setDepth(2);
         }
+    }
+
+    // ── Difficulty curve: easy until score 100, then ramp up ──────────
+    getDifficultyLevel() {
+        return this.score > 100 ? Math.floor((this.score - 100) / 5) : 0;
     }
 
     jump() {
@@ -104,7 +135,7 @@ class GameScene extends Phaser.Scene {
     addPipes() {
         if (this.gameOver) return;
 
-        let difficultyLevel = Math.floor(this.score / 5);
+        let difficultyLevel = this.getDifficultyLevel();
         
         let gap = 220 - (difficultyLevel * 10);
         gap = Math.max(gap, 130); // Minimum gap of 130
@@ -136,7 +167,27 @@ class GameScene extends Phaser.Scene {
             let coin = this.coins.create(550, pipeY, 'coin');
             coin.setVelocityX(currentSpeed);
             coin.body.allowGravity = false;
-            coin.setDisplaySize(40, 40); // ensure it's a good size
+            coin.setDisplaySize(40, 40);
+        }
+
+        // Spawn power-up in the gap with 8% chance (shield or magnet)
+        if (Phaser.Math.Between(1, 100) <= 8) {
+            let type = Phaser.Math.Between(0, 1) === 0 ? 'shield' : 'magnet';
+            let pu = this.powerups.create(550, pipeY, type);
+            pu.setVelocityX(currentSpeed);
+            pu.body.allowGravity = false;
+            pu.setDisplaySize(44, 44);
+            pu.powerupType = type;
+
+            // Gentle floating animation
+            this.tweens.add({
+                targets: pu,
+                y: pipeY - 12,
+                duration: 700,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         }
     }
 
@@ -144,7 +195,7 @@ class GameScene extends Phaser.Scene {
         if (this.gameOver) return;
 
         if (this.hasStarted) {
-            let difficultyLevel = Math.floor(this.score / 5);
+            let difficultyLevel = this.getDifficultyLevel();
             let currentSpeed = -200 - (difficultyLevel * 15);
             currentSpeed = Math.max(currentSpeed, -400);
 
@@ -153,16 +204,42 @@ class GameScene extends Phaser.Scene {
                 this.pipeTimer.timeScale = Math.abs(currentSpeed) / 200;
             }
 
-            // Parallax Scrolling: Background is slow, clouds are twice as fast
+            // Parallax Scrolling
             this.background.tilePositionX += Math.abs(currentSpeed) / 200;
             this.clouds.tilePositionX += Math.abs(currentSpeed) / 100;
 
-            // Constantly update speed of all moving elements to prevent overlaps when difficulty increments
+            // Sync all moving elements to current speed
             this.pipes.getChildren().forEach(pipe => pipe.setVelocityX(currentSpeed));
             this.coins.getChildren().forEach(coin => coin.setVelocityX(currentSpeed));
+            this.powerups.getChildren().forEach(pu => pu.setVelocityX(currentSpeed));
+
+            // Magnet effect: attract nearby coins to frog
+            if (this.hasMagnet) {
+                this.coins.getChildren().forEach(coin => {
+                    let dx = this.frog.x - coin.x;
+                    let dy = this.frog.y - coin.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        let pull = 300;
+                        coin.setVelocity(
+                            currentSpeed + (dx / dist) * pull,
+                            (dy / dist) * pull
+                        );
+                    }
+                });
+            }
         }
 
         this.frog.update();
+
+        // Draw / clear shield aura
+        this.shieldGfx.clear();
+        if (this.hasShield) {
+            this.shieldGfx.lineStyle(3, 0x00ccff, 0.8);
+            this.shieldGfx.strokeCircle(this.frog.x, this.frog.y, 38);
+            this.shieldGfx.lineStyle(1, 0xffffff, 0.3);
+            this.shieldGfx.strokeCircle(this.frog.x, this.frog.y, 44);
+        }
 
         this.pipes.getChildren().forEach(pipe => {
             pipe.update();
@@ -178,9 +255,12 @@ class GameScene extends Phaser.Scene {
 
         // Cleanup off-screen coins
         this.coins.getChildren().forEach(coin => {
-            if (coin.x < -50) {
-                coin.destroy();
-            }
+            if (coin.x < -50) coin.destroy();
+        });
+
+        // Cleanup off-screen power-ups
+        this.powerups.getChildren().forEach(pu => {
+            if (pu.x < -50) pu.destroy();
         });
 
         if (this.frog.y > 750 || this.frog.y < -50) {
@@ -190,11 +270,76 @@ class GameScene extends Phaser.Scene {
 
     collectCoin(frog, coin) {
         if (this.gameOver) return;
-        
         coin.destroy();
         this.score += 3;
         this.scoreText.setText('Score: ' + this.score);
         this.sound.play('coin', { volume: 0.4 });
+    }
+
+    collectPowerup(frog, pu) {
+        if (this.gameOver) return;
+
+        let type = pu.powerupType;
+        pu.destroy();
+
+        if (type === 'shield') {
+            this.hasShield = true;
+            this.updateStatusText();
+
+            // Flash feedback
+            this.cameras.main.flash(200, 0, 150, 255);
+        }
+
+        if (type === 'magnet') {
+            this.hasMagnet = true;
+            this.updateStatusText();
+
+            // Flash feedback
+            this.cameras.main.flash(200, 255, 140, 0);
+
+            // Clear existing timer if any
+            if (this.magnetTimer) this.magnetTimer.remove();
+
+            this.magnetTimer = this.time.delayedCall(10000, () => {
+                this.hasMagnet = false;
+                this.updateStatusText();
+            });
+        }
+    }
+
+    updateStatusText() {
+        let parts = [];
+        if (this.hasShield) parts.push('🛡️ Shield');
+        if (this.hasMagnet) parts.push('🧲 Magnet');
+        this.statusText.setText(parts.join('  '));
+    }
+
+    handlePipeCollision(frog, pipe) {
+        if (this.gameOver) return;
+
+        if (this.hasShield) {
+            // Consume shield, destroy the pipe pair that was hit
+            this.hasShield = false;
+            this.updateStatusText();
+
+            // Bounce away
+            frog.setVelocityX(150);
+            frog.setVelocityY(-300);
+
+            // Find and destroy both pipes in the pair (same x origin)
+            let hitX = Math.round(pipe.x);
+            this.pipes.getChildren().slice().forEach(p => {
+                if (Math.abs(Math.round(p.x) - hitX) < 60) {
+                    p.destroy();
+                }
+            });
+
+            // Camera shake as feedback
+            this.cameras.main.shake(200, 0.01);
+            return;
+        }
+
+        this.handleGameOver();
     }
 
     handleGameOver() {
