@@ -23,7 +23,8 @@ const config = {
         BootScene,
         MenuScene,
         GameScene,
-        GameOverScene
+        GameOverScene,
+        ShopScene
     ]
 };
 

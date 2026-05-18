@@ -55,6 +55,12 @@ class GameScene extends Phaser.Scene {
         this.frog = new Frog(this, 100, 300);
         this.frog.body.allowGravity = false; // Hover until start
 
+        // Apply active skin tint
+        let skinTint = PlayerData.getActiveTint();
+        if (skinTint !== null) {
+            this.frog.setTint(skinTint);
+        }
+
         // Cliff
         this.cliff = this.physics.add.sprite(100, 600, 'cliff');
         this.cliff.setDisplaySize(200, 600);
@@ -369,6 +375,7 @@ class GameScene extends Phaser.Scene {
         if (this.gameOver) return;
         coin.destroy();
         this.score += 3;
+        PlayerData.addCoins(1); // +1 cumulative coin per pickup
         this.scoreText.setText('Score: ' + this.score);
         this.sound.play('coin', { volume: 0.4 });
     }

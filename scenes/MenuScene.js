@@ -59,10 +59,25 @@ class MenuScene extends Phaser.Scene {
             yOff += 38;
         }
 
-        // ── Buttons ──────────────────────────────────────────────
+        // ── Coin display ─────────────────────────────────────────────
+        this.add.text(CX, 235, '🪙  ' + PlayerData.getCoins() + ' coins', {
+            fontFamily: 'monospace',
+            fontSize: '18px',
+            color: '#facc15',
+            fontStyle: 'bold',
+            stroke: '#000000',
+            strokeThickness: 4
+        }).setOrigin(0.5);
+
+        // ── Buttons ──────────────────────────────────────────────────
         // Start Button
-        this._drawBtn(240, 550, 280, 50, 0x4ade80, 0x16a34a, 'START', () => {
+        this._drawBtn(240, 540, 280, 50, 0x4ade80, 0x16a34a, 'START', () => {
             this.scene.start('GameScene');
+        });
+
+        // Shop Button
+        this._drawBtn(240, 600, 280, 46, 0xfacc15, 0xb45309, '🛍️ SHOP', () => {
+            this.scene.start('ShopScene');
         });
     }
 
