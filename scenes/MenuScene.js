@@ -60,7 +60,7 @@ class MenuScene extends Phaser.Scene {
         }
 
         // ── Coin display ─────────────────────────────────────────────
-        this.add.text(CX, 235, '🪙  ' + PlayerData.getCoins() + ' coins', {
+        this.add.text(240, 235, '🪙  ' + PlayerData.getCoins() + ' coins', {
             fontFamily: 'monospace',
             fontSize: '18px',
             color: '#facc15',
