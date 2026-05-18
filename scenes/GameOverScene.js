@@ -76,8 +76,13 @@ class GameOverScene extends Phaser.Scene {
         }
 
         // ── RESTART button ────────────────────────────────────────
-        this._drawBtn(240, 550, 280, 50, 0x4ade80, 0x16a34a, 'RESTART', () => {
+        this._drawBtn(240, 530, 280, 50, 0x4ade80, 0x16a34a, 'RESTART', () => {
             this.scene.start('GameScene');
+        });
+
+        // ── HOME button ──────────────────────────────────────────
+        this._drawBtn(240, 595, 280, 46, 0xfacc15, 0xb45309, '🏠 HOME', () => {
+            this.scene.start('MenuScene');
         });
     }
 

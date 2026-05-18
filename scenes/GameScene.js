@@ -103,6 +103,19 @@ class GameScene extends Phaser.Scene {
         // Shield visual aura (drawn around the frog when active)
         this.shieldGfx = this.add.graphics();
         this.shieldGfx.setDepth(3);
+        // Home button (top-left) to return to menu
+        this.homeBtn = this.add.text(12, 12, '🏠 HOME', {
+            fontFamily: 'monospace',
+            fontSize: '20px',
+            color: '#ffffff',
+            fontStyle: 'bold',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setOrigin(0, 0);
+        let homeZone = this.add.zone(12, 12, 100, 30).setInteractive({ useHandCursor: true });
+        homeZone.on('pointerdown', () => {
+            this.scene.start('MenuScene');
+        });
 
         // Setup Dust Particles
         try {
