@@ -9,6 +9,10 @@ class GameScene extends Phaser.Scene {
         this.hasStarted = false;
         this.score = 0;
 
+        // Sky phase tracking (day / dusk / night)
+        this.skyPhase = 'day'; // 'day' | 'dusk' | 'night'
+        this.skyTransitioning = false;
+
         // Power-up state
         this.hasShield = false;
         this.hasMagnet = false;
@@ -21,6 +25,27 @@ class GameScene extends Phaser.Scene {
         
         // Mid-ground Clouds (Parallax)
         this.clouds = this.add.tileSprite(240, 320, 500, 660, 'clouds');
+
+        // ── Sky Overlay (Day/Night cycle) ─────────────────────────────
+        // Sits just above the background/clouds, below gameplay objects
+        this.skyOverlay = this.add.rectangle(240, 320, 500, 660, 0xff6600, 0);
+        this.skyOverlay.setDepth(0.5);
+
+        // Stars layer (invisible by default, shown at night)
+        this.starsGfx = this.add.graphics();
+        this.starsGfx.setDepth(0.6);
+        this.starsGfx.setAlpha(0);
+        // Pre-draw a field of random stars
+        this._starPositions = [];
+        for (let i = 0; i < 60; i++) {
+            this._starPositions.push({
+                x: Phaser.Math.Between(0, 480),
+                y: Phaser.Math.Between(0, 400),
+                r: Math.random() < 0.3 ? 2 : 1
+            });
+        }
+        this.starsGfx.fillStyle(0xffffff, 1);
+        this._starPositions.forEach(s => this.starsGfx.fillCircle(s.x, s.y, s.r));
         
         this.pipes = this.physics.add.group({ allowGravity: false });
 
@@ -230,6 +255,9 @@ class GameScene extends Phaser.Scene {
             }
         }
 
+        // Day / Night sky update
+        this.updateSkyPhase();
+
         this.frog.update();
 
         // Draw / clear shield aura
@@ -265,6 +293,59 @@ class GameScene extends Phaser.Scene {
 
         if (this.frog.y > 750 || this.frog.y < -50) {
             this.handleGameOver();
+        }
+    }
+
+    // ── Sky Phase: transitions based on score ────────────────────────
+    updateSkyPhase() {
+        if (this.skyTransitioning) return;
+
+        if (this.score >= 100 && this.skyPhase !== 'night') {
+            // Transition to Night
+            this.skyPhase = 'night';
+            this.skyTransitioning = true;
+            this.skyOverlay.setFillStyle(0x000033);
+            this.tweens.add({
+                targets: this.skyOverlay,
+                fillAlpha: 0.55,
+                duration: 3000,
+                ease: 'Sine.easeInOut',
+                onComplete: () => { this.skyTransitioning = false; }
+            });
+            // Fade in stars
+            this.tweens.add({
+                targets: this.starsGfx,
+                alpha: 1,
+                duration: 3000,
+                ease: 'Sine.easeInOut'
+            });
+            // Tint clouds darker
+            this.tweens.add({
+                targets: [this.background, this.clouds],
+                alpha: 0.6,
+                duration: 3000,
+                ease: 'Sine.easeInOut'
+            });
+
+        } else if (this.score >= 50 && this.score < 100 && this.skyPhase === 'day') {
+            // Transition to Dusk
+            this.skyPhase = 'dusk';
+            this.skyTransitioning = true;
+            this.skyOverlay.setFillStyle(0xff5500);
+            this.tweens.add({
+                targets: this.skyOverlay,
+                fillAlpha: 0.30,
+                duration: 3000,
+                ease: 'Sine.easeInOut',
+                onComplete: () => { this.skyTransitioning = false; }
+            });
+            // Tint background slightly warm
+            this.tweens.add({
+                targets: [this.background, this.clouds],
+                alpha: 0.85,
+                duration: 3000,
+                ease: 'Sine.easeInOut'
+            });
         }
     }
 
