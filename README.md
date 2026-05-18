@@ -36,30 +36,13 @@ Frog/
     └── leaderboard.js    # Leaderboard utility functions
 ```
 
-## How to Run
+## Play Online
 
-Because the game loads local assets (images, audio), it needs to be run on a local web server to avoid CORS (Cross-Origin Resource Sharing) issues in the browser.
+The game is deployed and hosted on Vercel. You can play it directly in your browser without any setup!
 
-### Using VS Code Live Server
-1. Open the project folder in Visual Studio Code.
-2. Install the **Live Server** extension.
-3. Right-click on `index.html` and select **Open with Live Server**.
-4. The game will automatically open in your default web browser.
+[**Play Frog Jump Now!**](YOUR_VERCEL_LINK_HERE)
 
-### Using Python (if installed)
-1. Open a terminal or command prompt.
-2. Navigate to the game directory (`cd path/to/Frog`).
-3. Run the following command:
-   - For Python 3: `python -m http.server 8000`
-   - For Python 2: `python -m SimpleHTTPServer 8000`
-4. Open your web browser and go to `http://localhost:8000`.
-
-### Using Node.js (http-server)
-1. If you have Node.js installed, open a terminal.
-2. Install `http-server` globally: `npm install -g http-server`
-3. Navigate to the game directory.
-4. Run: `http-server`
-5. Open your web browser and go to the provided localhost URL (usually `http://localhost:8080`).
+*(Note: Replace `YOUR_VERCEL_LINK_HERE` with the actual Vercel URL)*
 
 ## Controls
 
