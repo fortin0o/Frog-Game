@@ -40,9 +40,8 @@ Frog/
 
 The game is deployed and hosted on Vercel. You can play it directly in your browser without any setup!
 
-[**Play Frog Jump Now!**](YOUR_VERCEL_LINK_HERE)
+[**Play Frog Jump Now!**]((https://frog-game-pi.vercel.app/))
 
-*(Note: Replace `YOUR_VERCEL_LINK_HERE` with the actual Vercel URL)*
 
 ## Controls
 
