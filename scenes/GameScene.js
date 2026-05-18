@@ -322,10 +322,6 @@ class GameScene extends Phaser.Scene {
             this.hasShield = false;
             this.updateStatusText();
 
-            // Bounce away
-            frog.setVelocityX(150);
-            frog.setVelocityY(-300);
-
             // Find and destroy both pipes in the pair (same x origin)
             let hitX = Math.round(pipe.x);
             this.pipes.getChildren().slice().forEach(p => {
@@ -334,8 +330,21 @@ class GameScene extends Phaser.Scene {
                 }
             });
 
-            // Camera shake as feedback
-            this.cameras.main.shake(200, 0.01);
+            // Visual shake on the frog in-place (no velocity change)
+            let origX = frog.x;
+            this.tweens.add({
+                targets: frog,
+                x: { from: origX - 12, to: origX + 12 },
+                duration: 60,
+                yoyo: true,
+                repeat: 3,
+                ease: 'Sine.easeInOut',
+                onComplete: () => { frog.x = origX; }
+            });
+
+            // Flash + camera shake as feedback
+            this.cameras.main.flash(250, 0, 180, 255);
+            this.cameras.main.shake(300, 0.015);
             return;
         }
 
