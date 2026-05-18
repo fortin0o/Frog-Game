@@ -26,10 +26,13 @@ class GameScene extends Phaser.Scene {
         // Mid-ground Clouds (Parallax)
         this.clouds = this.add.tileSprite(240, 320, 500, 660, 'clouds');
 
-        // ── Sky Overlay (Day/Night cycle) ─────────────────────────────
-        // Sits just above the background/clouds, below gameplay objects
-        this.skyOverlay = this.add.rectangle(240, 320, 500, 660, 0xff6600, 0);
-        this.skyOverlay.setDepth(0.5);
+        // ── Sky Overlays (Day/Night cycle) ───────────────────────────
+        // Two separate overlays, each fades in independently — no color jump
+        this.duskOverlay = this.add.rectangle(240, 320, 500, 660, 0xff5500, 0);
+        this.duskOverlay.setDepth(0.5);
+
+        this.nightOverlay = this.add.rectangle(240, 320, 500, 660, 0x000033, 0);
+        this.nightOverlay.setDepth(0.51);
 
         // Stars layer (invisible by default, shown at night)
         this.starsGfx = this.add.graphics();
@@ -296,22 +299,32 @@ class GameScene extends Phaser.Scene {
         }
     }
 
-    // ── Sky Phase: transitions based on score ────────────────────────
+    // ── Sky Phase: smooth cross-fade, no color flash ──────────────────
     updateSkyPhase() {
         if (this.skyTransitioning) return;
 
         if (this.score >= 100 && this.skyPhase !== 'night') {
-            // Transition to Night
+            // ── Transition: Dusk → Night ──
             this.skyPhase = 'night';
             this.skyTransitioning = true;
-            this.skyOverlay.setFillStyle(0x000033);
+
+            // Fade OUT the dusk overlay
             this.tweens.add({
-                targets: this.skyOverlay,
+                targets: this.duskOverlay,
+                fillAlpha: 0,
+                duration: 3000,
+                ease: 'Sine.easeInOut'
+            });
+
+            // Fade IN the night overlay
+            this.tweens.add({
+                targets: this.nightOverlay,
                 fillAlpha: 0.55,
                 duration: 3000,
                 ease: 'Sine.easeInOut',
                 onComplete: () => { this.skyTransitioning = false; }
             });
+
             // Fade in stars
             this.tweens.add({
                 targets: this.starsGfx,
@@ -319,7 +332,8 @@ class GameScene extends Phaser.Scene {
                 duration: 3000,
                 ease: 'Sine.easeInOut'
             });
-            // Tint clouds darker
+
+            // Darken background/clouds a bit more for night
             this.tweens.add({
                 targets: [this.background, this.clouds],
                 alpha: 0.6,
@@ -328,18 +342,20 @@ class GameScene extends Phaser.Scene {
             });
 
         } else if (this.score >= 50 && this.score < 100 && this.skyPhase === 'day') {
-            // Transition to Dusk
+            // ── Transition: Day → Dusk ──
             this.skyPhase = 'dusk';
             this.skyTransitioning = true;
-            this.skyOverlay.setFillStyle(0xff5500);
+
+            // Fade IN the dusk overlay smoothly from alpha 0
             this.tweens.add({
-                targets: this.skyOverlay,
+                targets: this.duskOverlay,
                 fillAlpha: 0.30,
                 duration: 3000,
                 ease: 'Sine.easeInOut',
                 onComplete: () => { this.skyTransitioning = false; }
             });
-            // Tint background slightly warm
+
+            // Slightly dim background for warmth
             this.tweens.add({
                 targets: [this.background, this.clouds],
                 alpha: 0.85,
